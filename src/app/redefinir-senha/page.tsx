@@ -1,0 +1,6 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+export default function SetNewPassword(){const [message,setMessage]=useState("");const [error,setError]=useState("");async function submit(form:FormData){setMessage("");setError("");try{const supabase=createClient();const {error}=await supabase.auth.updateUser({password:String(form.get("password"))});if(error)throw error;setMessage("Senha atualizada. Você já pode entrar com a nova senha.");}catch(e){setError(e instanceof Error?e.message:"Não foi possível atualizar a senha.");}}return <section className="auth-section"><div className="auth-card"><span className="eyebrow">RECUPERAÇÃO DE ACESSO</span><h1>Crie uma nova senha.</h1><p>Use pelo menos 8 caracteres.</p><form action={submit}><label className="field">Nova senha<input name="password" required type="password" minLength={8} autoComplete="new-password"/></label>{error&&<p className="form-error" role="alert">{error}</p>}{message&&<p className="form-success" role="status">{message} <Link href="/entrar">Entrar</Link></p>}<button className="button button-wide">Atualizar senha</button></form></div></section>}
